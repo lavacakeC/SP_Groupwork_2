@@ -1,2 +1,3 @@
 # SP_Groupwork_2
-# Deadline: 2022/10/21 12:00
+# 第二次小组作业
+# DDL 12:00 Friday 21th October 2022
