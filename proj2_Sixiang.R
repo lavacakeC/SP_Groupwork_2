@@ -1,7 +1,7 @@
-n <- 50
-prisoner <- c(1:(2*n))
-card <- sample(prisoner)
-Find_or_not <- 0
+# n <- 50
+# prisoner <- c(1:(2*n))
+# card <- sample(prisoner)
+# Find_or_not <- 0
 
 first_card <- function(n, k, strategy, card) {
   if (strategy == 1) {
@@ -124,12 +124,25 @@ dloop <- function(n, nreps) {
   return(prob)
 }
 test <- dloop(50,10000)
+sum(test)
+sum(test[1:50])
 class(test)
 barplot(test)
 sum(dloop(50,10000))
 system.time(dloop(50, 10000))
 
-sum(test[1:50])
+sum(test[1:50])/(sum(test))
+
+#Q6
+no_loop_l_50 <- 0
+for (i in 1:10000) {
+  tmp <- dloop(50,1)
+  no_loop_l_50 <- no_loop_l_50 + (sum(tmp[51:100]) == 0)
+}
+no_loop_l_50
+
+
+
 
 test <- c(1,23,3)
 test1 <- c(2,3,1)
