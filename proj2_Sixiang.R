@@ -101,37 +101,41 @@ system.time(Pall(50, 2, 10000))
 system.time(Pall(50, 3, 10000))
 
 dloop <- function(n, nreps) {
-  occur <- array(0, dim = 2*n)
+  occur <- vector(length = 2*n)
   box <- c(1:(2*n))
   
   for (try in 1:nreps) {
     card <- sample(box)
-    
+    tmp <- vector(length = 2*n)
     for (k in 1:(2*n)) {
       card_find <- card[k]
       for (try_k in 1:(2*n)) {
         if(card_find == k) {
-          occur[try_k] <- occur[try_k] + 1
+          tmp[try_k] <- 1
           break
         }
         card_find <- card[card_find]
       } 
       
     }
+    occur <- occur + tmp
   }
-  prob <- occur/(nreps * 2 * n)
+  prob <- occur/nreps
   return(prob)
 }
 test <- dloop(50,10000)
+class(test)
 barplot(test)
 sum(dloop(50,10000))
 system.time(dloop(50, 10000))
 
 sum(test[1:50])
 
-
-
-
+test <- c(1,23,3)
+test1 <- c(2,3,1)
+test2 <- vector(length = 3)
+test+test1+test2
+class(as.vector(test2+test1))
 # 
 # 
 # Pone <- function(n, k, strategy, nrep) {
