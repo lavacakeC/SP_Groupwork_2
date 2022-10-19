@@ -58,6 +58,9 @@ Pone <- function(n, k, strategy, nreps) {
 Pone(50, 1, 1, 10000)
 Pone(50, 1, 2, 10000)
 Pone(50, 1, 3, 10000)
+Pone(5, 1, 1, 10000)
+Pone(5, 1, 2, 10000)
+Pone(5, 1, 3, 10000)
 system.time(Pone(50, 1, 1, 10000))
 system.time(Pone(50, 1, 2, 10000))
 system.time(Pone(50, 1, 3, 10000))
@@ -96,6 +99,9 @@ Pall <- function(n, strategy, nreps) {
 Pall(50, 1, 10000)
 Pall(50, 2, 10000)
 Pall(50, 3, 10000)
+Pall(5, 1, 10000)
+Pall(5, 2, 10000)
+Pall(5, 3, 10000)
 system.time(Pall(50, 1, 10000))
 system.time(Pall(50, 2, 10000))
 system.time(Pall(50, 3, 10000))
@@ -135,11 +141,20 @@ sum(test[1:50])/(sum(test))
 
 #Q6
 no_loop_l_50 <- 0
+largest <- vector(length = 100)
+
 for (i in 1:10000) {
   tmp <- dloop(50,1)
-  no_loop_l_50 <- no_loop_l_50 + (sum(tmp[51:100]) == 0)
+  index <- c(1:100)
+  # no_loop_l_50 <- no_loop_l_50 + (sum(tmp[51:100]) == 0)
+  index <- index[tmp == 1]
+  largest[max(index)] <- largest[max(index)] + 1
 }
 no_loop_l_50
+test <- largest/10000
+
+barplot(test)
+sum(test)
 
 
 

@@ -1,7 +1,3 @@
-# n <- 50
-# prisoner <- c(1:(2*n))
-# card <- sample(prisoner)
-# Find_or_not <- 0
 
 # write the function "first_card" to determine the number of the card in the first box each prisoner opened when they enter the room 
 # the inputs of function are: n(half of the total number of prisoners, cards and boxes), k(the prisoner's number), strategy(1 is that each prisoner first open the box corresponding to their prisoner number, if the card's number in the box is the prisoner's number, the prisoner succeeds. If the card's number is not the prisoner's number, open the next box corresponding to the card's number; 2 is similar with strategy 1, just the first box opened randomly; 3 is all the boxes opened randomly), card(the boxes'number)
@@ -48,7 +44,7 @@ strategy_3 <- function(n, k, card) {
 # the number of 2n prisoners is assigned successively, and then the escape_num value is set to 0 to calculate the number of successful escapes. for loop is used to simulate the nreps experiment. 
 # in each experiment, the card variable was randomly assigned from the prisoner variable. When using strategy 1 or 2, use the first_card function to extract the number of the card each time the box is opened and assign that number to card_find. The strategy_1_2 function is then called to determine if the card number is equal to the prisoner and return TRUE or FALSE. If strategy 3 is used, strategy_3 function is directly called. 
 # The escape_num is added to the return value of the different strategy functions to calculate the prisoner's success in finding the box containing his number. The probability of success was calculated by dividing the number of successes by the total number of loop simulations
-Pone <- function(n, k, strategy, nreps) {
+Pone <- function(n, k, strategy, nreps = 10000) {
   
   prisoner <- c(1:(2*n))
   escape_num <- 0
@@ -76,24 +72,18 @@ Pone <- function(n, k, strategy, nreps) {
 Pone(5, 1, 1, 10000)
 Pone(5, 1, 2, 10000)
 Pone(5, 1, 3, 10000)
-system.time(Pone(5, 1, 1, 10000))
-system.time(Pone(5, 1, 2, 10000))
-system.time(Pone(5, 1, 3, 10000))
 
 # when n=50, which means there are 100 prisoners, estimate the probability of a single prisoner go free successfully under the 3 strategies
 Pone(50, 1, 1, 10000)
 Pone(50, 1, 2, 10000)
 Pone(50, 1, 3, 10000)
-system.time(Pone(50, 1, 1, 10000))
-system.time(Pone(50, 1, 2, 10000))
-system.time(Pone(50, 1, 3, 10000))
 
 # write the function "Pall" to eatimate the probability of all prisoners go free successfully under the 3 strategies
 # the inputs of the function are n, strategy and nreps
 # the output of function is the probability of all prisoners success under the 3 strategies
 # The main idea of Pall function is very similar to that of Pone function. The main difference is that another for loop is embedded in the for loop to simulate that all prisoners enter the room in one of experiments. If one of the prisoners fails in each experiment, the strategy function referenced will return FALSE. 
 # Use the if statement to determine when (! If find_or_not) is TRUE (meaning find_or_not is false), the condition fires, using a break statement to jump out of the current loop and making no changes to escape_num. After 2n cycles, determine whether escape_num is equal to 2n (if it is equal to 2n, every prisoner has successfully escaped). This judgment returns true or false, counts the number of successes using success_escape, and returns its success probability
-Pall <- function(n, strategy, nreps) {
+Pall <- function(n, strategy, nreps = 10000) {
   prisoner <- c(1:(2*n))
   success_escape <- 0
   
@@ -128,17 +118,11 @@ Pall <- function(n, strategy, nreps) {
 Pall(5, 1, 10000)
 Pall(5, 2, 10000)
 Pall(5, 3, 10000)
-system.time(Pall(5, 1, 10000))
-system.time(Pall(5, 2, 10000))
-system.time(Pall(5, 3, 10000))
 
 # when n=50, which means there are 100 prisoners, estimate the probability of all prisoners go free successfully under the 3 strategies
 Pall(50, 1, 10000)
 Pall(50, 2, 10000)
 Pall(50, 3, 10000)
-system.time(Pall(50, 1, 10000))
-system.time(Pall(50, 2, 10000))
-system.time(Pall(50, 3, 10000))
 
 # remarks: when the number of prisoners is large enough, the probability of all escaping should be about zero, for example, when n = 50, the probability of all success should be (1/2)^100, however, when we use strategy 1, the probability of success becomes about 30%.
 
@@ -165,29 +149,46 @@ dloop <- function(n, nreps) {
   prob <- occur/nreps
   return(prob)
 }
-test <- dloop(50,10000)
-sum(test)
-sum(test[1:50])
-class(test)
-barplot(test)
-sum(dloop(50,10000))
-system.time(dloop(50, 10000))
-
-sum(test[1:50])/(sum(test))
 
 #Q6
 no_loop_l_50 <- 0
+largest <- vector(length = 100)
+
 for (i in 1:10000) {
   tmp <- dloop(50,1)
+  index <- c(1:100)
   no_loop_l_50 <- no_loop_l_50 + (sum(tmp[51:100]) == 0)
+  index <- index[tmp == 1]
+  largest[max(index)] <- largest[max(index)] + 1
 }
-no_loop_l_50
+
+prob_no_longer_50 <- no_loop_l_50/10000
+prob_largest_onetime <- largest/10000
+names(prob_largest_onetime) <- c(0:99)
+
+color1 <- c(rgb(255,220,126,100, maxColorValue = 255), rgb(158,148,182,100, maxColorValue = 255))
+color2 <- c(rep(rgb(254,212,152,200, maxColorValue = 255),50), rep(rgb(158,148,182,200, maxColorValue = 255), 50))
+
+par(mfcol = c(1,3))
+barplot(c(prob_no_longer_50, sum(largest[51:100])/10000), space = 0
+        , col = color1, xaxs="i"
+        , xlab = "Length of the loop \nlonger than 50 or not"
+        , ylab = "Probability")
+axis(1, c(0,1,2), c(0,50,100))
+
+barplot(c(prob_no_longer_50, sum(largest[51:100])/10000), space = 0, col = color1, xaxs="i")
+axis(1, c(0,1,2), c(0,50,100))
+axis(3, c(0,1,2), c(0,50,100))
+par(new = TRUE)
+barplot(prob_largest_onetime, col = color2, xaxs = "i", yaxt = "n")
+axis(4, seq(0,0.025,0.01), seq(0,0.025,0.01))
+
+plot(c(1:100), xaxs = "i", type = "n", xlab = "", ylab = "", yaxt = "n", xaxt = "n")
+axis(3, seq(0,110,10), seq(0,110,10))
+par(new = TRUE)
+barplot(prob_largest_onetime, col = color2, xaxs = "i", yaxt = "n"
+        , xlab = "Length of the \nlongest loop in one experiment")
+axis(4, seq(0,0.025,0.01), seq(0,0.025,0.01))
 
 
 
-
-test <- c(1,23,3)
-test1 <- c(2,3,1)
-test2 <- vector(length = 3)
-test+test1+test2
-class(as.vector(test2+test1))
