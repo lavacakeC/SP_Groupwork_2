@@ -154,7 +154,7 @@ dloop <- function(n, nreps) {
   occur <- vector(length = 2*n)
   box <- c(1:(2*n))
   
-  # In the nreps' loop, we randomly assign the box value to the card in each loop, and then create a vector tmp to count the length value becomes 1 when each loop length occurs
+  # In the nreps' loop, we randomly assign the box value to the card in each loop, and then create a vector tmp to store which loop length occurs at least once. If a loop length occurs, then assign the corresponding position of the tmp vector as 1, which indicates that loop length occurs at least once in that experiment.
   for (try in 1:nreps) {
     card <- sample(box)
     tmp <- vector(length = 2*n)
