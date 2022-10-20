@@ -3,7 +3,8 @@
 
 # github repo's address: https://github.com/lavacakeC/SP_Groupwork_2.git
 
-# The three members of the group reviewed the topic, understood the meaning of the topic, and collected information online. Then they wrote Pone and Pall functions together and calculated the relevant results. Together, they discussed the surprising aspects of this problem. Cheng Sixiang completed the dloop function according to the ideas of the first two questions and calculated the results with examples. Finally, the three people discussed and completed how to visualize the probability of success
+# We reviewed the topic together, understood the meaning of the topic. After roughly understanding the logic of the topic, we drew a flow chart to organize our ideas. According to the flow chart, Pone and Pall functions were written together and the relevant results were calculated to explore the surprising aspects of this problem. Sixiang completed the dloop function according to the ideas of the first two questions and calculated the results with examples. 
+# After debug, together, we discussed the surprising aspects of this problem. After the preliminary code is determined, we have optimized and adjusted the code and integrated the code. Finally, in the visualising, to visualise the probabilities sensibly, we discussed many different ideas for plotting plots to show the success rate. Qinxuan and Ruishuo proposed ideas and gave their own understanding. Sixiang implemented them with codes and finally chose the most intuitive way
 # Ruishuo and Qinxuan each undertake about 30% of the work,Sixiang undertake about 40% of the work
 
 
