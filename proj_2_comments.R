@@ -153,26 +153,61 @@ dloop <- function(n, nreps) {
 }
 
 #Q6
-no_loop_l_50 <- 0
+# set the vector which is used to contain the largest loop length of each experiment and sum them.
 largest <- vector(length = 100)
-prob_of_each_length <- dloop(50,10000)
 
+#try 10000 times
 for (i in 1:10000) {
+  #use dloop to simulate if or not the length of a certain loop occuring at least once in one experiment.
   tmp <- dloop(50,1)
+  #Find the number of loop length occuring in the above dloop function.
   index <- c(1:100)
-  no_loop_l_50 <- no_loop_l_50 + (sum(tmp[51:100]) == 0)
   index <- index[tmp == 1]
+  #Find the largest loop length and accumulate it into the largest vector.
   largest[max(index)] <- largest[max(index)] + 1
 }
 
-prob_no_longer_50 <- no_loop_l_50/10000
+#calculate the probabilities of each loop length o be the largest loop length in an experiment.
 prob_largest_onetime <- largest/10000
-# names(prob_largest_onetime) <- c(0:99)
+#calculate the cumulative probabilities of each loop length to be the largest loop length in an experiment.
+prob_largest_onetime_cumulative <- vector(length = 100)
+for (i in 1:100) {
+  prob_largest_onetime_cumulative[i] <- sum(prob_largest_onetime[1:i])
+}
+
+#plot the cumulative probabilities
+plot(prob_largest_onetime_cumulative, type = "l"
+     , xaxs = "i"
+     , yaxs = "i"
+     , xlab = "Length of the longest loop in an experiment"
+     , ylab = "Probability"
+     , main = "The cumulative probability of the \nloop length no longer than x\n(from 1 to 100)")
+lines(c(50, 50), c(0, prob_largest_onetime_cumulative[50]), col = "blue")
+lines(c(0, 50), c(prob_largest_onetime_cumulative[50], prob_largest_onetime_cumulative[50]), col = "blue")
+axis(2, prob_largest_onetime_cumulative[50], prob_largest_onetime_cumulative[50]
+     , col = "blue"
+     , tck = -0.15
+     , line = 1)
+
+#color the region (length <=50)
+region_x <- c(1, 1:50, 50)
+region_y <- c(0, prob_largest_onetime_cumulative[1:50], 0)
+polygon(region_x, region_y, density = -1, col = "yellow")
+
+
+### Other way of visualising the probabilities ###
+# We think the previous plot is enough to visualising the probabilities that there is 
+# no loop longer than 50 in a random reshuffling of cards to boxes. 
+# The plots below are different ways of showing that probabilities. 
+# If the previous plot makes sense, you could stop here and not use the code below
+
+prob_no_longer_50 <- sum(largest[1:50])/10000
+prob_of_each_length <- dloop(50,10000)
 
 color1 <- c(rgb(255,220,126,100, maxColorValue = 255), rgb(158,148,182,100, maxColorValue = 255))
 color2 <- c(rep(rgb(254,212,152,200, maxColorValue = 255),50), rep(rgb(158,148,182,200, maxColorValue = 255), 50))
 
-par(mfcol = c(1,4))
+par(mfcol = c(1, 4))
 barplot(c(prob_no_longer_50, 1- prob_no_longer_50), space = 0
         , col = color1, xaxs="i"
         , xlab = "Length of the loop \nlonger than 50 or not"
@@ -200,5 +235,3 @@ par(new = TRUE)
 barplot(prob_of_each_length, xaxs = "i", xlab = "Length of the loop"
         , col = rgb(254,212,152,200, maxColorValue = 255)
         , main = "The probability of each loop length occurring \nat least once in an experiment")
-
-
