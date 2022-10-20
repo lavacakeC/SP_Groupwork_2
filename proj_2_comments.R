@@ -153,6 +153,7 @@ dloop <- function(n, nreps) {
 #Q6
 no_loop_l_50 <- 0
 largest <- vector(length = 100)
+prob_of_each_length <- dloop(50,10000)
 
 for (i in 1:10000) {
   tmp <- dloop(50,1)
@@ -164,31 +165,38 @@ for (i in 1:10000) {
 
 prob_no_longer_50 <- no_loop_l_50/10000
 prob_largest_onetime <- largest/10000
-names(prob_largest_onetime) <- c(0:99)
+# names(prob_largest_onetime) <- c(0:99)
 
 color1 <- c(rgb(255,220,126,100, maxColorValue = 255), rgb(158,148,182,100, maxColorValue = 255))
 color2 <- c(rep(rgb(254,212,152,200, maxColorValue = 255),50), rep(rgb(158,148,182,200, maxColorValue = 255), 50))
 
-par(mfcol = c(1,3))
-barplot(c(prob_no_longer_50, sum(largest[51:100])/10000), space = 0
+par(mfcol = c(1,4))
+barplot(c(prob_no_longer_50, 1- prob_no_longer_50), space = 0
         , col = color1, xaxs="i"
         , xlab = "Length of the loop \nlonger than 50 or not"
-        , ylab = "Probability")
+        , ylab = "Probability"
+        , main = "The probability of no loop\n longer than 50 or not")
 axis(1, c(0,1,2), c(0,50,100))
 
-barplot(c(prob_no_longer_50, sum(largest[51:100])/10000), space = 0, col = color1, xaxs="i")
+barplot(c(prob_no_longer_50, 1- prob_no_longer_50), space = 0, col = color1, xaxs="i")
 axis(1, c(0,1,2), c(0,50,100))
-axis(3, c(0,1,2), c(0,50,100))
 par(new = TRUE)
-barplot(prob_largest_onetime, col = color2, xaxs = "i", yaxt = "n")
+barplot(prob_largest_onetime, col = color2, xaxs = "i", yaxt = "n", xaxt = "n")
 axis(4, seq(0,0.025,0.01), seq(0,0.025,0.01))
 
-plot(c(1:100), xaxs = "i", type = "n", xlab = "", ylab = "", yaxt = "n", xaxt = "n")
-axis(3, seq(0,110,10), seq(0,110,10))
+plot(c(1:100), xaxs = "i", type = "n", xlab = "", ylab = "", yaxt = "n", xaxt = "n"
+     , main = "The probability of the \nlargest loop in an experiment")
+axis(1, seq(0,100,50), seq(0,100,50))
 par(new = TRUE)
 barplot(prob_largest_onetime, col = color2, xaxs = "i", yaxt = "n"
         , xlab = "Length of the \nlongest loop in one experiment")
 axis(4, seq(0,0.025,0.01), seq(0,0.025,0.01))
 
+plot(c(1:100), xaxs = "i", type = "n", xlab = "", ylab = "", yaxt = "n", xaxt = "n")
+axis(1, seq(0,110,10), seq(0,110,10))
+par(new = TRUE)
+barplot(prob_of_each_length, xaxs = "i", xlab = "Length of the loop"
+        , col = rgb(254,212,152,200, maxColorValue = 255)
+        , main = "The probability of each loop length occurring \nat least once in an experiment")
 
 
