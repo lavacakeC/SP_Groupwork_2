@@ -7,9 +7,11 @@
 # After debug, together, we discussed the surprising aspects of this problem. After the preliminary code is determined, we have optimized and adjusted the code and integrated the code. Finally, in the visualising, to visualise the probabilities sensibly, we discussed many different ideas for plotting plots to show the success rate. Qinxuan and Ruishuo proposed ideas and gave their own understanding. Sixiang implemented them with codes and finally chose the most intuitive way
 # Ruishuo and Qinxuan each undertake about 30% of the work,Sixiang undertake about 40% of the work
 
+# Aim: There are 2n prisoners, 2n boxes, 2n cards with numbers from 1 to 2n, and a card is randomly placed in each box, using different strategies to simulate that each of them can be found in n attempts to open the box Probability of own corresponding number
+# Strategy: For strategy 1, the prisoner is the first to open the box with their number. If the card number in the box is the same as the prisoner's number, it is successful. If they do not, the box with the card number is opened again. Strategy 2 is similar with strategy, just first box is randomly selected. Strategy 3 is every box is randomly selected.
 
 # write the function "first_card" to determine the number of the card in the first box each prisoner opened when they enter the room 
-# the inputs of function are: n(half of the total number of prisoners, cards and boxes), k(the prisoner's number), strategy(1 is that each prisoner first open the box corresponding to their prisoner number, if the card's number in the box is the prisoner's number, the prisoner succeeds. If the card's number is not the prisoner's number, open the next box corresponding to the card's number; 2 is similar with strategy 1, just the first box opened randomly; 3 is all the boxes opened randomly), card(the boxes'number)
+# the inputs of function are: n(half of the total number of prisoners, cards and boxes), k(the prisoner's number), strategy(1 is that each prisoner first open the box corresponding to their prisoner number, if the card's number in the box is the prisoner's number, the prisoner succeeds. If the card's number is not the prisoner's number, open the next box corresponding to the card's number; 2 is similar with strategy 1, just the first box opened randomly; 3 is all the boxes opened randomly), card(the boxes' number)
 # the output "card_find" is first card's number in the box they first choose
 first_card <- function(n, k, strategy, card) {
   # use "if...else if..." conditional statement to assign value to "card_find"
@@ -25,7 +27,7 @@ first_card <- function(n, k, strategy, card) {
 
 # write the function "strategy_1_2" to determine whether the prisoner go free or not under the strategy 1 and 2
 # the inputs of function are: n,k,card(same as function "first_card"); card_find(the output of the function "first_card")
-# the output of the function is TRUE of FALSE, which means the prisoner go free or not
+# the output of the function is TRUE or FALSE, which means the prisoner go free or not
 strategy_1_2 <- function(n, k, card, card_find) {
   Find_or_not <- FALSE
   # using for loop to implement that each time prisoner try, the prisoner open the box which number is corresponding to the card's number they see in the last box
@@ -44,23 +46,24 @@ strategy_1_2 <- function(n, k, card, card_find) {
 
 # write a function "strategy_3" simulation strategy 3 that the prisoner randomly chooses to open the box n times.
 # the inputs of this funtion are n(the number of times can open the box, half number of total prisoners), k(prisoner's number), card(the box's number)
-# the ouput is value 0 or 1, 1 means succeddfuly find a card number in box that mach prisoner's number. 0 means did't find number in the box that mach prisoner's number
-# at this funtion, using sample function to randomly assign n numbers from 1 to 2n to simulate the value of opening n box each time. When one of the numbers is the same as the prisoner's number(k), the value corresponding to that array position becomes TRUE. Otherwise the value becomes FALSE. Then useing sum funtion to calculate whether there have TRUE value in the array
+# the ouput is True or False, True means successfully find a card number in box that mach prisoner's number. False means didn't find number in the box that mach prisoner's number
+# at this funtion, using sample function to randomly assign n numbers from 1 to 2n to simulate the value of opening n box each time. When one of the numbers is the same as the prisoner's number(k), the value corresponding to that array position becomes TRUE. Otherwise the value becomes FALSE. Then using sum funtion to calculate whether there have TRUE value in the array(1 occurs at most once)
 strategy_3 <- function(n, k, card) {
-  return(sum(k == card[sample(c(1:(2*n)), n)]))
+  return(sum(k == card[sample(c(1:(2*n)), n)]) != 0)
 }
 
-# write the function "Pone" to eatimate the probability of a single prisoner go free successfully under the 3 strategies
-# the inputs of function are: n,k,strategy(same as above), nreps(the number of replicate similations to run)
-# the output of function is the probability of a single prisoner success under the 3 strategies
+# write the function "Pone" to estimate the probability of a single prisoner go free successfully under the chosen strategy
+# the inputs of function are: n,k,strategy(same as above), nreps(the number of replicate simulations to run)
+# the output of function is the probability of a single prisoner success under the chosen strategy
 Pone <- function(n, k, strategy, nreps = 10000) {
+  # First initialize some values that the function needs to call
   # the number of 2n prisoners is assigned successively, and then the escape_num value is set to 0 to calculate the number of successful escapes
   prisoner <- c(1:(2*n))
   escape_num <- 0
   
-  # for loop is used to simulate the nreps experiment
+  # for loop is used to simulate the experiment nreps times
   for (rep in 1:nreps) {
-    # in each experiment, the card variable was randomly assigned from the prisoner variable
+    # Variable Initialization in loop. In each experiment, the card variable was randomly assigned from the prisoner variable
     card <- sample(prisoner)
     # When using strategy 1 or 2, use the first_card function to extract the number of the card each time the box is opened and assign that number to card_find
     if (strategy == 1 | strategy == 2) {
@@ -74,25 +77,26 @@ Pone <- function(n, k, strategy, nreps = 10000) {
     }
     
   }
-  # The probability of success was calculated by dividing the number of successes by the total number of loop simulations
+  # The probability of success was calculated by dividing the number of successes by nreps
   return(escape_num/nreps)
   
 }
 
-# test when n=5, which means there are 10 prisoners, estimate the probability of a single prisoner go free successfully under the 3 strategies
+# test when n=5, which means there are 10 prisoners, estimate the probability of first prisoner go free successfully under the chosen strategy
 Pone(5, 1, 1, 10000)
 Pone(5, 1, 2, 10000)
 Pone(5, 1, 3, 10000)
 
-# test when n=50, which means there are 100 prisoners, estimate the probability of a single prisoner go free successfully under the 3 strategies
+# test when n=50, which means there are 100 prisoners, estimate the probability of first prisoner go free successfully under the chosen strategy
 Pone(50, 1, 1, 10000)
 Pone(50, 1, 2, 10000)
 Pone(50, 1, 3, 10000)
 
-# write the function "Pall" to eatimate the probability of all prisoners go free successfully under the 3 strategies
+
+# write the function "Pall" to estimate the probability of all prisoners go free successfully under the chosen strategy
 # the inputs of the function are n, strategy and nreps
-# the output of function is the probability of all prisoners success under the 3 strategies
-# The main idea of Pall function is very similar to that of Pone function
+# the output of function is the probability of all prisoners success by chosen different strategy
+# The main idea of Pall function is very similar to that of Pone function, however, the pone function only targets one prisoner in each experiment, and the pall function considers whether all prisoners escape in each experiment
 Pall <- function(n, strategy, nreps = 10000) {
   prisoner <- c(1:(2*n))
   success_escape <- 0
@@ -104,15 +108,15 @@ Pall <- function(n, strategy, nreps = 10000) {
     
     # The main difference is that another for loop is embedded in the for loop to simulate that all prisoners enter the room in one of experiments. If one of the prisoners fails in each experiment, the strategy function referenced will return FALSE.
     for (k in 1:(2*n)) {
-      
+      # This part's logical is similar with the pone function 
       if (strategy == 1 | strategy == 2) {
         card_find <- first_card(n, k, strategy, card)
         Find_or_not <- strategy_1_2(n, k, card, card_find)
-        # Use the if statement to determine when (! If find_or_not) is TRUE (meaning find_or_not is false), the condition fires, using a break statement to jump out of the current loop and making no changes to escape_num
+        # if one of the prisoner not run successfully, means all prisoner not run out successful. Use the if statement to determine when (! If find_or_not) is TRUE (meaning find_or_not is false), the condition fires, using a break statement to jump out of the current loop and making no changes to escape_num
         if (!Find_or_not) {break}
         escape_num <- escape_num + 1
       }
-      
+      # This part's logical is similar with the pone function 
       else if (strategy == 3) {
         Find_or_not <- strategy_3(n, k, card)
         if (!Find_or_not) {break}
@@ -127,34 +131,34 @@ Pall <- function(n, strategy, nreps = 10000) {
   
 }
 
-# when n=5, which means there are 10 prisoners, estimate the probability of all prisoners go free successfully under the 3 strategies
+# when n=5, which means there are 10 prisoners, estimate the probability of all prisoners go free successfully under the chosen strategy in one experiment
 Pall(5, 1, 10000)
 Pall(5, 2, 10000)
 Pall(5, 3, 10000)
 
-# when n=50, which means there are 100 prisoners, estimate the probability of all prisoners go free successfully under the 3 strategies
+# when n=50, which means there are 100 prisoners, estimate the probability of all prisoners go free successfully under the chosen strategy in one experiment
 Pall(50, 1, 10000)
 Pall(50, 2, 10000)
 Pall(50, 3, 10000)
 
 # remarks: when the number of prisoners is large enough, the probability of all escaping should be about zero, for example, when n = 50, the probability of all success should be (1/2)^100, however, when we use strategy 1, the probability of success becomes about 30%.
-# remarks: using the Pone function, our results showe that strategy 2 have a success rate of nearly 40%, Strategy 1 and strategy 3 both have a success rate of about 50%; In the Pall function, strategies 2 and 3 have an extremely small probability of success only when n is small, and the success rate approaches zero when n becomes large. However, the success rate of strategy 1 is independent of the size of n, which is the most surprising thing
+# remarks: using the Pone function, our results show that strategy 2 have a success rate of nearly 40%, Strategy 1 and strategy 3 both have a success rate of about 50%; In the Pall function, strategies 2 and 3 have an extremely small probability of success only when n is small, and the success rate approaches zero when n becomes large. However, the success rate of strategy 1 is independent of the size of n, which is the most surprising thing
 # remarks: our understanding is that strategy 1 is for the whole population, so the number of individuals in the whole population does not affect the final output, but the strategy 2 and 3 calculate the probability of the whole population on an individual basis, so the number of individuals in the whole population will affect the final output
 
-# Write a dloop function to calculate and record the probability of each loop length
+# Write a dloop function to calculate and record the probability of each loop length. It is worth noting that each loop length has the probability of appearing more than once in an experiment
 # the inputs are n and nreps
 # the outputs is prob(2n-vector of probabilities)
 dloop <- function(n, nreps) {
   
-  # First define variable "occur" that create a vector that length is 2n, then create a  array "box" that length is 2n
+  # First define variable "occur" and "box" that both create a vector that length is 2n
   occur <- vector(length = 2*n)
   box <- c(1:(2*n))
   
-  # In the nreps' loop, we randomly assign the box value to card in each loop, and then create vector tmp to count the number of times each loop length occurs
+  # In the nreps' loop, we randomly assign the box value to the card in each loop, and then create a vector tmp to count the length value becomes 1 when each loop length occurs
   for (try in 1:nreps) {
     card <- sample(box)
     tmp <- vector(length = 2*n)
-    # Loop k from 1 to 2n, assigning card_find the KTH value of card on each loop.
+    # Loop k from 1 to 2n, assigning card_find the K'th value of card on each loop.
     for (k in 1:(2*n)) {
       card_find <- card[k]
       # try_k is placed in 2n loops to locate the length of each loop length when the prisoner successfully finds his number card
