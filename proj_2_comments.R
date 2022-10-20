@@ -125,6 +125,8 @@ Pall(50, 2, 10000)
 Pall(50, 3, 10000)
 
 # remarks: when the number of prisoners is large enough, the probability of all escaping should be about zero, for example, when n = 50, the probability of all success should be (1/2)^100, however, when we use strategy 1, the probability of success becomes about 30%.
+# remarks: using the Pone function, our results showe that strategy 2 have a success rate of nearly 40%, Strategy 1 and strategy 3 both have a success rate of about 50%; In the Pall function, strategies 2 and 3 have an extremely small probability of success only when n is small, and the success rate approaches zero when n becomes large. However, the success rate of strategy 1 is independent of the size of n, which is the most surprising thing
+# remarks: our understanding is that strategy 1 is for the whole population, so the number of individuals in the whole population does not affect the final output, but the strategy 2 and 3 calculate the probability of the whole population on an individual basis, so the number of individuals in the whole population will affect the final output
 
 dloop <- function(n, nreps) {
   occur <- vector(length = 2*n)
